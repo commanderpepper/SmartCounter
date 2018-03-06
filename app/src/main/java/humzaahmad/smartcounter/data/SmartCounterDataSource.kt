@@ -20,7 +20,7 @@ interface SmartCounterDataSource {
         fun onDataNotAvailable()
     }
 
-    interface LoadCounterCallbacl {
+    interface LoadCounterCallback {
         fun onCountersLoaded() : List<Counter>
 
         fun onDataNotAvailable()
@@ -32,5 +32,19 @@ interface SmartCounterDataSource {
         fun onDataNotAvailable()
     }
 
-    
+    fun getProjects(callback: LoadProjectCallback)
+
+    fun getProject(projectid: String, callback: GetProjectCallback)
+
+    fun saveProject(project: Project)
+
+    fun deleteProject(project: Project)
+
+    fun getCounters(callback: LoadCounterCallback)
+
+    fun getCounter(counterid: String, callback: GetCounterCallback)
+
+    fun saveCounter(counter: Counter)
+
+    fun deleteCounter(counter: Counter)
 }
