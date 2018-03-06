@@ -1,10 +1,11 @@
 package humzaahmad.smartcounter.data
 
 import android.arch.persistence.room.Database
-import android.arch.persistence.room.Entity
 import android.arch.persistence.room.Room
 import android.arch.persistence.room.RoomDatabase
 import android.content.Context
+import humzaahmad.smartcounter.data.model.Counter
+import humzaahmad.smartcounter.data.model.Project
 
 /**
  * Created by Humza on 3/5/2018.

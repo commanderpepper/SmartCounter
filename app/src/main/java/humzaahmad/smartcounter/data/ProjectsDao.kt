@@ -1,6 +1,7 @@
 package humzaahmad.smartcounter.data
 
 import android.arch.persistence.room.*
+import humzaahmad.smartcounter.data.model.Project
 
 /**
  * Created by Humza on 3/4/2018.
