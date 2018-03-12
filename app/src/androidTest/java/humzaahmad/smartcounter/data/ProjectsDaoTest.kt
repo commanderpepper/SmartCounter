@@ -28,22 +28,31 @@ class ProjectsDaoTest {
     @Before fun initDb() {
         // using an in-memory database because the information stored here disappears when the
         // process is killed
-        Log.d("Room", "Before")
         database = Room.inMemoryDatabaseBuilder(InstrumentationRegistry.getContext(),
                 SmartCounterDatabase::class.java).build()
     }
 
-    @After fun closeDb() {
-        Log.d("Room", "After")
-        database.close()
-    }
+    @After fun closeDb() { database.close() }
 
     @Test fun insertProjectAndGetId() {
         database.projectsDao().insertProject(PROJECT)
-
-        val loaded = database.projectsDao().getAllProjects()[0]
-
+        val loaded = database.projectsDao().getProjectById(PROJECT.id)
         assertProject(loaded, PROJECT.id, PROJECT.title, PROJECT.description)
+    }
+
+    @Test fun insertProjectsAndGetList() {
+        database.projectsDao().insertProject(PROJECT)
+        database.projectsDao().insertProject(PROJECT2)
+        val projectList = database.projectsDao().getAllProjects()
+        assertProject(projectList[0], PROJECT.id, PROJECT.title, PROJECT.description)
+        assertProject(projectList[1], PROJECT2.id, PROJECT2.title, PROJECT2.description)
+    }
+
+    @Test fun insertProjectAndDeleteProject() {
+        database.projectsDao().insertProject(PROJECT)
+        database.projectsDao().deleteProject(PROJECT.id)
+        val project = database.projectsDao().getProjectById(PROJECT.id)
+        assertProjectIsNull(project)
     }
 
     private fun assertProject(project: Project, id: String, title: String, description: String) {
@@ -53,9 +62,13 @@ class ProjectsDaoTest {
         assertThat(project.description, `is`(description))
     }
 
+    private fun assertProjectIsNull(project: Project) {assertThat(project, `is`(nullValue()))}
+
     companion object {
         private val PROJECT_TITLE: String = "Test Project"
         private val PROJECT_DESC: String = "It's a description"
         private val PROJECT = Project(title = PROJECT_TITLE, description = PROJECT_DESC)
+        private val PROJECT2 = Project(title = PROJECT_TITLE, description = PROJECT_DESC)
+
     }
 }
