@@ -38,5 +38,5 @@ interface ProjectsDao {
      * @param projectid of project to be deleted
      * @return number of projects being deleted. Should return 1
      */
-    @Query("DELETE FROM projects WHERE projectid = :projectid") fun deleteProject(projectid : String) : Int
+    @Query("DELETE FROM projects WHERE id = :projectid") fun deleteProject(projectid : String) : Int
 }

@@ -16,7 +16,7 @@ import java.util.*
 
 @Entity(tableName = "projects")
 data class Project @JvmOverloads constructor(
-        @PrimaryKey @ColumnInfo (name = "projectid") var id: String = UUID.randomUUID().toString(),
+        @PrimaryKey @ColumnInfo (name = "id") var id: String = UUID.randomUUID().toString(),
         @ColumnInfo(name = "title") var title: String = "",
         @ColumnInfo(name = "description") var description: String = ""
 )

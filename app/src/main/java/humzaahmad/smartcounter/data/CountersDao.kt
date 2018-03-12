@@ -50,7 +50,7 @@ interface CountersDao{
      * @param parentId id from a counter that you want to act as the parent
      * @param counterid id you want to be the child
      */
-    @Query("UPDATE counters SET parentid = :parentId WHERE counterid = :counterid") fun setParentCounter(parentId: String, counterid: String)
+    @Query("UPDATE counters SET parentCounterId = :parentId WHERE counterid = :counterid") fun setParentCounter(parentId: String, counterid: String)
 
     /**
      * Delete a counter
