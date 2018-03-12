@@ -3,7 +3,7 @@ package humzaahmad.smartcounter.data
 import android.arch.persistence.room.Room
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
-import android.util.Log
+
 import humzaahmad.smartcounter.data.model.Project
 import org.junit.After
 import org.junit.Before
@@ -14,7 +14,7 @@ import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.CoreMatchers.notNullValue
 import org.hamcrest.CoreMatchers.nullValue
 import org.hamcrest.MatcherAssert.assertThat
-import org.mockito.Matchers.isNotNull
+
 
 
 /**
