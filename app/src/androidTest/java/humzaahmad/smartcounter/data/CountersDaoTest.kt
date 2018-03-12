@@ -17,64 +17,114 @@ import org.junit.Test
 
 /**
  * Created by Humza on 3/12/2018.
+ * Test class for the CountersDAO
  */
 @RunWith(AndroidJUnit4::class)
 class CountersDaoTest {
 
     private lateinit var database: SmartCounterDatabase
 
-    @Before fun initDb() {
+    @Before
+    fun initDb() {
         // using an in-memory database because the information stored here disappears when the
         // process is killed
         database = Room.inMemoryDatabaseBuilder(InstrumentationRegistry.getContext(),
                 SmartCounterDatabase::class.java).build()
     }
 
-    @After fun closeDb() { database.close() }
+    @After
+    fun closeDb() {
+        database.close()
+    }
 
-    @Test fun putCounterAndGetById() {
+    /**
+     * Insert a counter and retrieve a counter
+     */
+    @Test
+    fun putCounterAndGetById() {
+        //Insert a project
         database.projectsDao().insertProject(PROJECT)
+        //Insert a counter
         database.countersDao().insertCounter(COUNTER1)
 
-        //val counter = database.countersDao().deleteCounter(COUNTER1.id)
+        //Get a counter using the id of COUNTER1
         val counter = database.countersDao().getCounter(COUNTER1.id)
+        //Test against val counter
         assertCounter(counter, counterId = COUNTER1.id, projectId = COUNTER1.projectid)
     }
 
-    @Test fun deleteCounter() {
+    /**
+     * Insert a counter then delete a counter
+     * Tests to see if the counter no longer exists
+     */
+    @Test
+    fun deleteCounter() {
+        //Insert a project
         database.projectsDao().insertProject(PROJECT)
+        //Insert a counter
         database.countersDao().insertCounter(COUNTER1)
 
+        //Delete a counter using the counter id
         database.countersDao().deleteCounter(COUNTER1.id)
+        //Retrieve a counter, val counter should be null
         val counter = database.countersDao().getCounter(COUNTER1.id)
+        //Tests to see if val counter is null
         assertCounterIsNull(counter)
     }
 
-    @Test fun increaseCounter() {
+    /**
+     * Increase the count of a particular counter
+     */
+    @Test
+    fun increaseCounter() {
+        //Insert a project
         database.projectsDao().insertProject(PROJECT)
+        //Insert a counter
         database.countersDao().insertCounter(COUNTER1)
 
+        //Increase the count by 5
         database.countersDao().countVariation(5, COUNTER1.id)
+        //Retrieve a counter
         val counter = database.countersDao().getCounter(COUNTER1.id)
+        //Check to see if the count of the counter object is 5
         assertCounter(counter, counterId = COUNTER1.id, projectId = COUNTER1.projectid, count = 5)
     }
 
-    @Test fun decreaseCounter() {
+    /**
+     * Decrease a counter of a particular counter
+     */
+    @Test
+    fun decreaseCounter() {
+        //Insert a project
         database.projectsDao().insertProject(PROJECT)
+        //Insert a counter
         database.countersDao().insertCounter(COUNTER1)
 
+        //Decrease the count by -5
         database.countersDao().countVariation(-5, COUNTER1.id)
+        //Retrieve a counter
         val counter = database.countersDao().getCounter(COUNTER1.id)
+        //Check to see if the count of the counter object is -5
         assertCounter(counter, counterId = COUNTER1.id, projectId = COUNTER1.projectid, count = -5)
     }
 
-    @Test fun setParentCounter() {
+    /**
+     * Set the parent counter id of a counter to be that one of another counter
+     */
+    @Test
+    fun setParentCounter() {
+        //Insert a project
         database.projectsDao().insertProject(PROJECT)
+        //Insert a counter, a child counter
         database.countersDao().insertCounter(COUNTER1)
+        //Insert a counter, a parent counter
         database.countersDao().insertCounter(COUNTER2)
 
+        //Set the parent counter of a counter
         database.countersDao().setParentCounter(COUNTER2.id, COUNTER1.id)
+        //Retrieve a counter
         val counter = database.countersDao().getCounter(COUNTER1.id)
+        //Tests to see if the parentID is the id of COUNTER2
         assertCounter(counter, counterId = COUNTER1.id, projectId = COUNTER1.projectid, parentId = COUNTER2.id)
     }
 
@@ -87,7 +137,9 @@ class CountersDaoTest {
         assertThat(counter.parentCounterId, `is`<String>(parentId))
     }
 
-    private fun assertCounterIsNull(counter: Counter) {assertThat(counter, `is`(nullValue()))}
+    private fun assertCounterIsNull(counter: Counter) {
+        assertThat(counter, `is`(nullValue()))
+    }
 
     companion object {
         private val PROJECT_TITLE: String = "Test Project"
