@@ -54,6 +54,32 @@ class CountersDaoTest {
     }
 
     /**
+     * Test to see if inserting a counter twice changes its state in the table
+     */
+    @Test
+    fun insertSameCounter() {
+        //Insert a project
+        database.projectsDao().insertProject(PROJECT)
+        //Insert a counter
+        database.countersDao().insertCounter(COUNTER1)
+
+        //Get a counter using the id of COUNTER1
+        val counter = database.countersDao().getCounter(COUNTER1.id)
+        //Test against val counter
+        assertCounter(counter, counterId = COUNTER1.id, projectId = COUNTER1.projectid)
+
+        //Increase the counter
+        counter.count = 5
+
+        //Insert the counter with the increased count
+        database.countersDao().insertCounter(counter)
+
+        val counter2 = database.countersDao().getCounter(COUNTER1.id)
+
+        assertCounter(counter2, counterId = counter.id, projectId = counter.projectid, count = 5)
+    }
+
+    /**
      * Insert a counter then delete a counter
      * Tests to see if the counter no longer exists
      */

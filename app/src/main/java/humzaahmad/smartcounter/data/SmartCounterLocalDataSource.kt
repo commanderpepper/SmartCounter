@@ -16,41 +16,85 @@ class SmartCounterLocalDataSource private constructor(
 ) : SmartCounterDataSource {
 
     override fun getProjects(callback: SmartCounterDataSource.LoadProjectCallback) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        appExecutors.diskIO.execute {
+            val projects = projectsDao.getAllProjects()
+            appExecutors.mainThread.execute {
+                if (projects.isEmpty()) {
+                    callback.onDataNotAvailable()
+                } else {
+                    callback.onProjectsLoaded(projects)
+                }
+            }
+        }
     }
 
     override fun getProject(projectid: String, callback: SmartCounterDataSource.GetProjectCallback) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        appExecutors.diskIO.execute {
+            val project = projectsDao.getProjectById(projectid)
+            appExecutors.mainThread.execute {
+                if (project != null) {
+                    callback.onProjectLoaded(project)
+                } else {
+                    callback.onDataNotAvailable()
+                }
+            }
+        }
     }
 
     override fun saveProject(project: Project) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        appExecutors.diskIO.execute { projectsDao.insertProject(project) }
     }
 
-    override fun deleteProject(project: Project) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun deleteProject(projectId: String) {
+        appExecutors.diskIO.execute { projectsDao.deleteProject(projectId) }
     }
 
-    override fun getCounters(callback: SmartCounterDataSource.LoadCounterCallback) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun getCounters(projectId: String, callback: SmartCounterDataSource.LoadCounterCallback) {
+        appExecutors.diskIO.execute {
+            val counters = countersDao.getCounters(projectId)
+            appExecutors.mainThread.execute {
+                if (counters.isEmpty()) {
+                    callback.onDataNotAvailable()
+                } else {
+                    callback.onCountersLoaded(counters)
+                }
+            }
+        }
     }
 
     override fun getCounter(counterid: String, callback: SmartCounterDataSource.GetCounterCallback) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        appExecutors.diskIO.execute {
+            val counter = countersDao.getCounter(counterid)
+            appExecutors.mainThread.execute {
+                if (counter != null) {
+                    callback.onCounterLoaded(counter)
+                } else {
+                    callback.onDataNotAvailable()
+                }
+            }
+        }
     }
 
     override fun saveCounter(counter: Counter) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        appExecutors.diskIO.execute { countersDao.insertCounter(counter) }
     }
 
-    override fun deleteCounter(counter: Counter) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun deleteCounter(counterId: String) {
+        appExecutors.diskIO.execute { countersDao.deleteCounter(counterId) }
     }
 
     companion object {
-        private val INSTANCE = SmartCounterLocalDataSource
+        private var INSTANCE = SmartCounterLocalDataSource? = null
 
-
+        @JvmStatic
+        fun getInstance(appExecutors: AppExecutors, projectDao: ProjectsDao, countersDao: CountersDao) {
+            if(INSTANCE == null) {
+                synchronized(SmartCounterLocalDataSource::javaClass) {
+                    INSTANCE = SmartCounterLocalDataSource(appExecutors, projectDao, countersDao)
+                }
+            }
+            return INSTANCE
+        }
     }
 
 }
