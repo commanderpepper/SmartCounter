@@ -84,16 +84,22 @@ class SmartCounterLocalDataSource private constructor(
     }
 
     companion object {
-        private var INSTANCE = SmartCounterLocalDataSource? = null
+        private var INSTANCE: SmartCounterLocalDataSource? = null
 
         @JvmStatic
-        fun getInstance(appExecutors: AppExecutors, projectDao: ProjectsDao, countersDao: CountersDao) {
-            if(INSTANCE == null) {
+        fun getInstance(appExecutors: AppExecutors, projectDao: ProjectsDao, countersDao: CountersDao)
+                : SmartCounterLocalDataSource {
+            if (INSTANCE == null) {
                 synchronized(SmartCounterLocalDataSource::javaClass) {
                     INSTANCE = SmartCounterLocalDataSource(appExecutors, projectDao, countersDao)
                 }
             }
-            return INSTANCE
+            return INSTANCE!!
+        }
+
+        @VisibleForTesting
+        fun clearInstance() {
+            INSTANCE = null
         }
     }
 
