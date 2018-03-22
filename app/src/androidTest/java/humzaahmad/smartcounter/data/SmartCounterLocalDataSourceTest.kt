@@ -213,7 +213,7 @@ class SmartCounterLocalDataSourceTest {
                         if (counter.id == newCounter2.id)
                             counter2IdIsFound = true
                     }
-                    
+
                     assertTrue(counter1IdIsFound)
                     assertTrue(counter2IdIsFound)
                 }
