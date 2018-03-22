@@ -4,6 +4,7 @@ import android.arch.persistence.room.Room
 import android.support.test.InstrumentationRegistry
 import android.support.test.filters.LargeTest
 import android.support.test.runner.AndroidJUnit4
+import humzaahmad.smartcounter.data.model.Counter
 import humzaahmad.smartcounter.data.model.Project
 import humzaahmad.smartcounter.data.util.SingleExecutors
 import org.hamcrest.core.Is
@@ -55,7 +56,7 @@ class SmartCounterLocalDataSourceTest {
 
     @Test
     fun saveProject_retrievesProject() {
-        //given a new project
+        // given a new project
         val newProject = Project(title = "Test Project", description = "Test Desc")
 
         with(localDataSource) {
@@ -130,6 +131,97 @@ class SmartCounterLocalDataSourceTest {
                 override fun onDataNotAvailable() {
                     fail()
                 }
+            })
+        }
+    }
+
+    @Test
+    fun saveCounter_retrievesCounter() {
+        // base project
+        val newProject = Project(title = "Test Project", description = "Test Desc")
+        // given a counter
+        val newCounter = Counter(projectid = newProject.id)
+
+        with(localDataSource) {
+            saveProject(newProject)
+            // save a counter
+            saveCounter(newCounter)
+
+            // retrieve counter from persistent memory
+            getCounter(newCounter.id, object : SmartCounterDataSource.GetCounterCallback {
+                override fun onCounterLoaded(counter: Counter) {
+                    assertThat(counter, Is.`is`(newCounter))
+                }
+
+                override fun onDataNotAvailable() {
+                    fail("Callback error")
+                }
+            })
+        }
+    }
+
+    @Test
+    fun deleteCounter_emptyListofCounter() {
+        // base project
+        val newProject = Project(title = "Test Project", description = "Test Desc")
+        // given a counter
+        val newCounter = Counter(projectid = newProject.id)
+
+        with(localDataSource) {
+            saveProject(newProject)
+            // save a counter
+            saveCounter(newCounter)
+
+            val callback = mock(SmartCounterDataSource.LoadCounterCallback::class.java)
+
+            // delete a counter
+            deleteCounter(newCounter.id)
+
+            // retrieve a list of counters
+            getCounters(newProject.id, callback)
+
+            verify(callback).onDataNotAvailable()
+            verify(callback, Mockito.never()).onCountersLoaded(LinkedList<Counter>())
+        }
+    }
+
+    @Test
+    fun saveCounters_getListOfCounters() {
+        // base project
+        val newProject = Project(title = "Test Project", description = "Test Desc")
+        // given counters
+        val newCounter1 = Counter(projectid = newProject.id)
+        val newCounter2 = Counter(projectid = newProject.id)
+
+        // retrieve a list of counters
+        with(localDataSource) {
+            saveProject(newProject)
+            saveCounter(newCounter1)
+            saveCounter(newCounter2)
+
+            getCounters(newProject.id, object : SmartCounterDataSource.LoadCounterCallback {
+                override fun onCountersLoaded(counters: List<Counter>) {
+                    assertNotNull(counters)
+                    assertTrue(counters.size >= 2)
+
+                    var counter1IdIsFound = false
+                    var counter2IdIsFound = false
+
+                    for (counter in counters) {
+                        if (counter.id == newCounter1.id)
+                            counter1IdIsFound = true
+                        if (counter.id == newCounter2.id)
+                            counter2IdIsFound = true
+                    }
+                    
+                    assertTrue(counter1IdIsFound)
+                    assertTrue(counter2IdIsFound)
+                }
+
+                override fun onDataNotAvailable() {
+                    fail()
+                }
+
             })
         }
     }
