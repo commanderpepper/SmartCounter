@@ -14,13 +14,17 @@ interface ProjectsContract {
         fun showAddProject()
 
         fun showProjectDetails(projectId: String)
+
+        fun showProjectLoadingError()
+
+        fun showNoProjects()
     }
 
     interface Presenter : BasePresenter {
-        fun loadProject()
+        fun loadProjects()
 
         fun addNewProject()
 
-        fun openProjectDetails()
+        fun openProjectDetails(requestedProject : Project)
     }
 }
