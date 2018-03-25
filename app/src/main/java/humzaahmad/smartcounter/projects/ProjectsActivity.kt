@@ -3,6 +3,9 @@ package humzaahmad.smartcounter.projects
 import android.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toolbar
 import humzaahmad.smartcounter.R
 import humzaahmad.smartcounter.data.ProjectsDao

@@ -13,17 +13,13 @@
         <android.support.v7.widget.Toolbar
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/toolbar"/>
+            app:title="Projects"
+            app:titleTextColor="White"
+            android:id="@+id/projects_toolbar"/>
     </android.support.design.widget.AppBarLayout>
 
-    <android.support.v4.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="android.support.design.widget.AppBarLayout$ScrollingViewBehavior">
-
-    </android.support.v4.widget.NestedScrollView>
-
     <android.support.design.widget.FloatingActionButton
+        android:id="@+id/project_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"

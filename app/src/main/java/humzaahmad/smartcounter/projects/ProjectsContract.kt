@@ -26,5 +26,7 @@ interface ProjectsContract {
         fun addNewProject()
 
         fun openProjectDetails(requestedProject : Project)
+
+        fun result(requestCode: Int, resultCode: Int)
     }
 }

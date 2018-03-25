@@ -37,5 +37,10 @@ class ProjectsPresenter(val projectDataSource: SmartCounterLocalDataSource, val 
         projectView.showProjectDetails(requestedProject.id)
     }
 
+    override fun result(requestCode: Int, resultCode: Int) {
+        //TODO: Add this code
+        // If a task was successfully added, show snackbar
+    }
+
 
 }
