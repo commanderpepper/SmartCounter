@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">SmartCounter</string>
+    <string name="app_name">Smart Counter</string>
+    <string name="no_projects">There are no projects!</string>
 </resources>

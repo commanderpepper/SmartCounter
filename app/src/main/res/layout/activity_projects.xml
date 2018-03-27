@@ -14,7 +14,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:title="Projects"
-            app:titleTextColor="White"
+            app:titleTextColor="#FFFFFF"
             android:id="@+id/projects_toolbar"/>
     </android.support.design.widget.AppBarLayout>
 
